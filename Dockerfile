@@ -1,5 +1,10 @@
 FROM ekidd/rust-musl-builder:1.38.0 AS builder
 
+USER root
+
+RUN apt-get update && \
+  apt-get install -y upx
+
 WORKDIR /app
 
 RUN sudo chown rust:rust .
@@ -13,9 +18,10 @@ RUN mkdir src && \
     cargo build --release && \
     rm -rf /app/target/x86_64-unknown-linux-musl/release/deps/dvirt*
 
-# Build the program.
+# Build and compress the program.
 COPY . .
 RUN cargo build --release
+RUN upx /app/target/x86_64-unknown-linux-musl/release/dvirt
 
 FROM scratch
 
