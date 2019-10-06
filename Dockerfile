@@ -24,7 +24,7 @@ RUN mkdir src && \
 COPY . .
 RUN cargo build --target ${TARGET_ARCHITECTURE} --release
 RUN strip /app/target/${TARGET_ARCHITECTURE}/release/dvirt
-RUN upx /app/target/${TARGET_ARCHITECTURE}/release/dvirt
+RUN upx --brute /app/target/${TARGET_ARCHITECTURE}/release/dvirt
 RUN mv /app/target/${TARGET_ARCHITECTURE}/release/dvirt /app/dvirt
 
 FROM scratch
