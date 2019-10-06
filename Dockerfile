@@ -23,6 +23,7 @@ RUN mkdir src && \
 # Build and compress the program.
 COPY . .
 RUN cargo build --target ${TARGET_ARCHITECTURE} --release
+RUN strip /app/target/${TARGET_ARCHITECTURE}/release/dvirt
 RUN upx /app/target/${TARGET_ARCHITECTURE}/release/dvirt
 RUN mv /app/target/${TARGET_ARCHITECTURE}/release/dvirt /app/dvirt
 
