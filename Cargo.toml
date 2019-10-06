@@ -1,0 +1,22 @@
+[package]
+name = "dvirt"
+version = "0.1.0"
+authors = ["Alexandre Kirszenberg <alexandre.kirszenberg@epita.fr>"]
+edition = "2018"
+
+[dependencies]
+image = "0.22.3"
+imageproc = "0.19.2"
+iron = "0.6.1"
+router = "0.6.0"
+multipart = "0.16.1"
+serde = "1.0.101"
+serde_json = "1.0.41"
+iron-json-response = "0.6.0"
+tempfile = "3.1.0"
+
+[profile.release]
+opt-level = 'z'  # Optimize for size.
+lto = true
+codegen-units = 1
+panic = 'abort'
