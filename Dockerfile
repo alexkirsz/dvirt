@@ -1,5 +1,7 @@
 FROM ekidd/rust-musl-builder:1.38.0 AS builder
 
+ARG TARGET_ARCHITECTURE=x86_64-unknown-linux-musl
+
 USER root
 
 RUN apt-get update && \
@@ -14,18 +16,19 @@ USER rust
 # Install and build dependencies first to avoid rebuilding on source change.
 COPY Cargo.toml Cargo.lock ./
 RUN mkdir src && \
-    echo "fn main() { }" > src/main.rs && \
-    cargo build --release && \
-    rm -rf /app/target/x86_64-unknown-linux-musl/release/deps/dvirt*
+  echo "fn main() { }" > src/main.rs && \
+  cargo build --release && \
+  rm -rf /app/target/${TARGET_ARCHITECTURE}/release/deps/dvirt*
 
 # Build and compress the program.
 COPY . .
-RUN cargo build --release
-RUN upx /app/target/x86_64-unknown-linux-musl/release/dvirt
+RUN cargo build --target ${TARGET_ARCHITECTURE} --release
+RUN upx /app/target/${TARGET_ARCHITECTURE}/release/dvirt
+RUN mv /app/target/${TARGET_ARCHITECTURE}/release/dvirt /app/dvirt
 
 FROM scratch
 
-COPY --from=builder /app/target/x86_64-unknown-linux-musl/release/dvirt /
+COPY --from=builder /app/dvirt /
 EXPOSE 80
 
 CMD ["/dvirt"]
