@@ -74,7 +74,7 @@ fn get_histogram_from_request(req: &mut Request) -> Option<Histogram> {
     // for instance in a scratch image.
     let mut file = tempfile_in("./").ok()?;
 
-    save_multipart_to_file(&mut entry.data, &mut file);
+    save_multipart_to_file(&mut entry.data, &mut file)?;
 
     // We're writing to a temporary file instead of piping it directly to the
     // image decoder because we need to support seeking.
