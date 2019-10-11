@@ -17,6 +17,7 @@ struct Histogram(ChannelHistogram);
 struct HistogramChannel([u32; 256]);
 
 impl Serialize for HistogramChannel {
+    #[must_use]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
@@ -30,6 +31,7 @@ impl Serialize for HistogramChannel {
 }
 
 impl Serialize for Histogram {
+    #[must_use]
     fn serialize<S>(&self, serializer: S) -> Result<S::Ok, S::Error>
     where
         S: Serializer,
@@ -42,6 +44,7 @@ impl Serialize for Histogram {
     }
 }
 
+#[must_use]
 fn get_first_entry<R: Read>(multipart: Multipart<R>) -> Option<MultipartField<Multipart<R>>> {
     match multipart.into_entry() {
         ReadEntryResult::Entry(entry) => Some(entry),
@@ -49,6 +52,7 @@ fn get_first_entry<R: Read>(multipart: Multipart<R>) -> Option<MultipartField<Mu
     }
 }
 
+#[must_use]
 fn save_multipart_to_file<R: Read>(
     data: &mut MultipartData<Multipart<R>>,
     file: &mut File,
@@ -61,6 +65,7 @@ fn save_multipart_to_file<R: Read>(
 
 // We don't care much about errors, so let's just return None whenever we meet
 // one. A better implementation would define its own error type.
+#[must_use]
 fn get_histogram_from_request(req: &mut Request) -> Option<Histogram> {
     let multipart = Multipart::from_request(req).ok()?;
 
@@ -102,6 +107,7 @@ fn get_histogram_from_request(req: &mut Request) -> Option<Histogram> {
     }))
 }
 
+#[must_use]
 fn handler(req: &mut Request) -> IronResult<Response> {
     Ok(match get_histogram_from_request(req) {
         Some(histogram) => {
